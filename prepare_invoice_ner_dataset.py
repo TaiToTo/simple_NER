@@ -19,8 +19,20 @@ label_idx_dict = {'O': 0,
 
 
 def split_tokenize_label_dataset(split_path, tokenizer, overlap = 20):
-    #print("Checkpoint A")
-    
+
+    def conver_tag_to_id(tag):
+        if tag=='O':
+            return 0
+
+        try:
+            return label_idx_dict[str(tag).split('-')[1]]
+
+        except:
+            return 0
+
+
+
+
     with open(split_path, "r", encoding="utf-8") as f:
         file_path_list = f.read().splitlines()
 
@@ -35,19 +47,18 @@ def split_tokenize_label_dataset(split_path, tokenizer, overlap = 20):
             temp_df = pd.read_csv(file_path)
         
         labeled_token_list = [str(token) for token in temp_df[temp_df.columns[0]]] # Some data are float in the original file
-        label_list = [label_idx_dict[str(tag).split('-')[-1]] for tag in list(temp_df[temp_df.columns[1]])]
-        
+
+        tag_list = [tag for tag in list(temp_df[temp_df.columns[1]])]
+        label_list = [conver_tag_to_id(elem) for elem in tag_list]
+
         split_and_tokenized_file_list, split_and_tokenized_labels, split_word_id_list, split_token_ids_list = split_tokenize_label_file(labeled_token_list, label_list, tokenizer, overlap)
-        #print("Checkpoint C")
         final_split_and_tokenized_file_list.append(split_and_tokenized_file_list)
         final_split_and_tokenized_labels.append(split_and_tokenized_labels)
         final_split_word_id_list.append(split_word_id_list)
         final_split_token_ids_list.append(split_token_ids_list)
         del temp_df
-        #if(cnt==19):
-        #    break
+
      
-    #print("Checkpoint D")
     final_split_and_tokenized_file_list = list(itertools.chain.from_iterable(final_split_and_tokenized_file_list))
     final_split_and_tokenized_labels = list(itertools.chain.from_iterable(final_split_and_tokenized_labels))
     final_split_word_id_list = list(itertools.chain.from_iterable(final_split_word_id_list))
@@ -128,14 +139,9 @@ class form_input():
             bert_token_ids = np.concatenate([bert_token_ids, 12*np.ones(pad_len)], 0)
             tok_type_id = np.concatenate([tok_type_id, np.zeros(pad_len)], 0) 
             att_mask = np.concatenate([att_mask, np.zeros(pad_len)], 0)  
-            bert_labels = np.concatenate([bert_labels, 12*np.ones(pad_len)], 0) 
-        ########################################            
-        # Forming the label
-       
-        #if self.data_type !='test':
-        #    bert_labels = bert_labels + [6]*pad_len
-        #else:
-        #    bert_labels = 1
+            bert_labels = np.concatenate([bert_labels, 12*np.ones(pad_len)], 0)
+
+
             
         
         if self.data_type=='test':
@@ -146,6 +152,8 @@ class form_input():
                 'bert_tokens': bert_tokens, 
                 'bert_token_word_ids': bert_tokenized_word_ids }
         else:
+
+            pass
             return {'ids': torch.tensor(bert_token_ids, dtype = torch.long),
                 'tok_type_id': torch.tensor(tok_type_id, dtype = torch.long),
                 'att_mask': torch.tensor(att_mask, dtype = torch.long),
