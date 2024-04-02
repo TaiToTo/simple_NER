@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import itertools
 import numpy as np
@@ -40,7 +41,8 @@ def split_tokenize_label_dataset(split_path, tokenizer, overlap = 20):
     final_split_and_tokenized_labels = []
     final_split_word_id_list= []
     final_split_token_ids_list = []
-    for cnt, file_path in enumerate(file_path_list):
+    for cnt, file_name in enumerate(file_path_list):
+        file_path = os.path.join('data', file_name)
         try:
             temp_df = pd.read_csv(file_path, encoding='unicode_escape')
         except UnicodeDecodeError:
