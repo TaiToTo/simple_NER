@@ -79,7 +79,7 @@ def print_NER_on_invoice(model, prod_input):
 
 
 if __name__ == "__main__":
-    test_split_path = 'split/test.txt'
+    test_split_path = 'data/split/test.txt'
 
     # bert_path = '../kaggle_ner/huggingface-bert/bert-base-uncased/'
     model_checkpoint = "bert-base-cased"
