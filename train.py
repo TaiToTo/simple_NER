@@ -61,7 +61,7 @@ def eval_fn(data_loader, model):
     eval_loss = 0
     predictions = np.array([], dtype=np.int64).reshape(0, config['MAX_LEN'])
     true_labels = np.array([], dtype=np.int64).reshape(0, config['MAX_LEN'])
-    print("Evaluation phase")
+    print("\nEvaluation phase")
     with torch.no_grad():
         for index, dataset in enumerate(data_loader):
             batch_input_ids = dataset['ids'].to(config['device'], dtype=torch.long)
@@ -78,7 +78,7 @@ def eval_fn(data_loader, model):
             eval_prediction = output[1]
 
             if ((index + 1) % 10 == 0):
-                print("Step {}, train loss {}".format(index + 1, step_loss))
+                print("Step {}, eval loss {}".format(index + 1, step_loss))
 
             eval_loss += step_loss
 
@@ -107,12 +107,10 @@ def train_engine(epoch, train_data, valid_data):
         eval_loss, eval_predictions, true_labels = eval_fn(data_loader=valid_data,
                                                            model=model)
 
-        # print(f"Epoch {i} , Train loss: {train_loss}, Eval loss: {eval_loss}")
-
         if eval_loss < best_eval_loss:
             best_eval_loss = eval_loss
 
-            print("Saving the model")
+            print("\nSaving the model")
             torch.save(model.state_dict(), config['model_name'])
 
     return model, eval_predictions, true_labels
@@ -126,9 +124,9 @@ if __name__ == "__main__":
         train_file_path_list = f.read().splitlines()
 
     model_checkpoint = "bert-base-cased"
-    train_split_path = './split/train.txt'
-    val_split_path = './split/val.txt'
-    test_split_path = './split/test.txt'
+    train_split_path = 'split/train.txt'
+    val_split_path = 'split/val.txt'
+    test_split_path = 'split/test.txt'
 
     with open(train_split_path, "r", encoding="utf-8") as f:
         train_file_path_list = f.read().splitlines()
