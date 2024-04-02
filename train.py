@@ -116,17 +116,17 @@ def train_engine(epoch, train_data, valid_data):
     return model, eval_predictions, true_labels
 
 if __name__ == "__main__":
-    train_split_path = 'split/train.txt'
-    val_split_path = 'split/val.txt'
-    test_split_path = 'split/test.txt'
+    train_split_path = 'data/split/train.txt'
+    val_split_path = 'data/split/val.txt'
+    test_split_path = 'data/split/test.txt'
 
     with open(train_split_path, "r", encoding="utf-8") as f:
         train_file_path_list = f.read().splitlines()
 
     model_checkpoint = "bert-base-cased"
-    train_split_path = 'split/train.txt'
-    val_split_path = 'split/val.txt'
-    test_split_path = 'split/test.txt'
+    train_split_path = 'data/split/train.txt'
+    val_split_path = 'data/split/val.txt'
+    test_split_path = 'data/split/test.txt'
 
     with open(train_split_path, "r", encoding="utf-8") as f:
         train_file_path_list = f.read().splitlines()
